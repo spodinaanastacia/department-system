@@ -30,12 +30,14 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     'django_filters',
+    'corsheaders',  # ← Добавили для работы с React
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # ← Добавлено для поддержки русского языка
+    'corsheaders.middleware.CorsMiddleware',  # ← Добавили (должен быть выше CommonMiddleware)
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,8 +67,6 @@ WSGI_APPLICATION = 'department_project.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -76,8 +76,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -95,24 +93,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/6.1/topics/i18n/
-
-LANGUAGE_CODE = 'ru'  # ← Изменено с 'en-us' на 'ru'
-
-TIME_ZONE = 'Europe/Moscow'  # ← Московское время
-
-USE_I18N = True  # ← Обязательно True для перевода интерфейса
-
+LANGUAGE_CODE = 'ru'
+TIME_ZONE = 'Europe/Moscow'
+USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.1/howto/static-files/
-
+# Static files
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/6.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -127,13 +115,10 @@ REST_FRAMEWORK = {
 }
 
 
-# Доступные языки (опционально)
-LANGUAGES = [
-    ('ru', 'Русский'),
-    ('en', 'English'),
+# Настройки CORS (для работы с React frontend)
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
 ]
 
-# Папка с переводами (опционально)
-LOCALE_PATHS = [
-    BASE_DIR / 'locale',
-]
+CORS_ALLOW_CREDENTIALS = True
