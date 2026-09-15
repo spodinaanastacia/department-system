@@ -1,0 +1,44 @@
+# Виртуальное окружение Python
+venv/
+env/
+ENV/
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# База данных SQLite
+db.sqlite3
+db.sqlite3-journal
+
+# Переменные окружения и секреты
+.env
+.env.local
+*.secret
+
+# IDE и редакторы кода
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Файлы операционной системы
+.DS_Store
+Thumbs.db
+
+# Node modules (для frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Сборка frontend
+dist/
+build/
+
+# Лог файлы
+*.log
