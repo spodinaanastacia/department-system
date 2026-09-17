@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function WorkloadList() {
   const [workloads, setWorkloads] = useState([]);
@@ -20,8 +21,8 @@ function WorkloadList() {
   const fetchData = async () => {
     try {
       const [workloadsRes, teachersRes] = await Promise.all([
-        axios.get('http://127.0.0.1:8000/api/нагрузка/'),
-        axios.get('http://127.0.0.1:8000/api/преподаватели/')
+        axios.get(`${API_URL}/api/нагрузка/`),
+        axios.get(`${API_URL}/api/преподаватели/`)
       ]);
       setWorkloads(workloadsRes.data.results || workloadsRes.data);
       setTeachers(teachersRes.data.results || teachersRes.data);
@@ -35,7 +36,7 @@ function WorkloadList() {
   const handleAddWorkload = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/api/нагрузка/', newWorkload);
+      await axios.post(`${API_URL}/api/нагрузка/`, newWorkload);
       alert('Нагрузка добавлена!');
       setShowForm(false);
       setNewWorkload({ преподаватель: '', тип: 'curator', описание: '', часы: 0 });
@@ -48,7 +49,7 @@ function WorkloadList() {
   const handleDelete = async (id) => {
     if (window.confirm('Удалить запись о нагрузке?')) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/нагрузка/${id}/`);
+        await axios.delete(`${API_URL}/api/нагрузка/${id}/`);
         fetchData();
       } catch (err) {
         alert('Ошибка при удалении');

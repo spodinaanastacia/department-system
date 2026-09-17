@@ -5,7 +5,8 @@ from .models import (
     Дисциплина,
     Публикация,
     ДополнительнаяНагрузка,
-    Отчет
+    Отчет,
+    Бронирование
 )
 
 
@@ -50,3 +51,17 @@ class ОтчетSerializer(serializers.ModelSerializer):
         model = Отчет
         fields = '__all__'
         read_only_fields = ['дата_создания']
+
+
+class БронированиеSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели Бронирование"""
+    статус = serializers.SerializerMethodField()
+    аудитория_номер = serializers.CharField(source='аудитория.номер', read_only=True)
+    преподаватель_фио = serializers.CharField(source='преподаватель.фио', read_only=True, default='')
+    
+    class Meta:
+        model = Бронирование
+        fields = '__all__'
+    
+    def get_статус(self, obj):
+        return 'Занято' if obj.статус_сейчас() else 'Свободно'

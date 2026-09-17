@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function SubjectList() {
   const [subjects, setSubjects] = useState([]);
@@ -21,8 +22,8 @@ function SubjectList() {
   const fetchData = async () => {
     try {
       const [subjectsRes, teachersRes] = await Promise.all([
-        axios.get('http://127.0.0.1:8000/api/дисциплины/'),
-        axios.get('http://127.0.0.1:8000/api/преподаватели/')
+        axios.get(`${API_URL}/api/дисциплины/`),
+        axios.get(`${API_URL}/api/преподаватели/`)
       ]);
       setSubjects(subjectsRes.data.results || subjectsRes.data);
       setTeachers(teachersRes.data.results || teachersRes.data);
@@ -36,7 +37,7 @@ function SubjectList() {
   const handleAddSubject = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/api/дисциплины/', newSubject);
+      await axios.post(`${API_URL}/api/дисциплины/`, newSubject);
       alert('Дисциплина добавлена!');
       setShowForm(false);
       setNewSubject({ название: '', код: '', часы_лекций: 0, часы_практик: 0, преподаватели: [] });
@@ -49,7 +50,7 @@ function SubjectList() {
   const handleDelete = async (id) => {
     if (window.confirm('Удалить дисциплину?')) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/дисциплины/${id}/`);
+        await axios.delete(`${API_URL}/api/дисциплины/${id}/`);
         fetchData();
       } catch (err) {
         alert('Ошибка при удалении');

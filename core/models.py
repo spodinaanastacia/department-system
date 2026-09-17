@@ -143,3 +143,76 @@ class Отчет(models.Model):
 
     def __str__(self):
         return f"{self.тип} от {self.дата_создания.strftime('%d.%m.%Y')}"
+
+class Бронирование(models.Model):
+    """Модель бронирования аудиторий"""
+    аудитория = models.ForeignKey(
+        Аудитория,
+        on_delete=models.CASCADE,
+        related_name='бронирования',
+        verbose_name="Аудитория"
+    )
+    преподаватель = models.ForeignKey(
+        Преподаватель,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='бронирования',
+        verbose_name="Преподаватель"
+    )
+    день_недели = models.CharField(
+        max_length=10,
+        choices=[
+            ('monday', 'Понедельник'),
+            ('tuesday', 'Вторник'),
+            ('wednesday', 'Среда'),
+            ('thursday', 'Четверг'),
+            ('friday', 'Пятница'),
+            ('saturday', 'Суббота'),
+        ],
+        verbose_name="День недели"
+    )
+    время_начала = models.TimeField(verbose_name="Время начала")
+    время_окончания = models.TimeField(verbose_name="Время окончания")
+    тип_занятия = models.CharField(
+        max_length=50,
+        choices=[
+            ('lecture', 'Лекция'),
+            ('practice', 'Практика'),
+            ('lab', 'Лабораторная'),
+            ('exam', 'Экзамен'),
+            ('consultation', 'Консультация'),
+            ('other', 'Другое'),
+        ],
+        verbose_name="Тип занятия"
+    )
+    описание = models.TextField(blank=True, verbose_name="Описание")
+    активно = models.BooleanField(default=True, verbose_name="Активно")
+    дата_создания = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+
+    class Meta:
+        verbose_name = "Бронирование"
+        verbose_name_plural = "Бронирования"
+        ordering = ['день_недели', 'время_начала']
+
+    def __str__(self):
+        return f"{self.аудитория.номер} ({self.get_день_недели_display()}) {self.время_начала}-{self.время_окончания}"
+
+    def статус_сейчас(self):
+        """Проверяет, занята ли аудитория сейчас"""
+        from django.utils import timezone
+        now = timezone.now()
+        
+        # Проверяем день недели
+        day_map = {
+            0: 'monday', 1: 'tuesday', 2: 'wednesday',
+            3: 'thursday', 4: 'friday', 5: 'saturday'
+        }
+        current_day = day_map.get(now.weekday())
+        
+        if current_day != self.день_недели:
+            return False
+        
+        # Проверяем время
+        current_time = now.time()
+        return self.время_начала <= current_time <= self.время_окончания

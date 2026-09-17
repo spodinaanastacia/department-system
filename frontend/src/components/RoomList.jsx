@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function RoomList() {
   const [rooms, setRooms] = useState([]);
@@ -18,7 +19,7 @@ function RoomList() {
 
   const fetchRooms = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/аудитории/');
+      const response = await axios.get(`${API_URL}/api/аудитории/`);
       setRooms(response.data.results || response.data);
       setLoading(false);
     } catch (err) {
@@ -30,7 +31,7 @@ function RoomList() {
   const handleAddRoom = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/api/аудитории/', newRoom);
+      await axios.post(`${API_URL}/api/аудитории/`, newRoom);
       alert('Аудитория добавлена!');
       setShowForm(false);
       setNewRoom({ номер: '', вместимость: 1, тип: 'office', оборудование: '' });
@@ -43,7 +44,7 @@ function RoomList() {
   const handleDelete = async (id) => {
     if (window.confirm('Удалить аудиторию?')) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/аудитории/${id}/`);
+        await axios.delete(`${API_URL}/api/аудитории/${id}/`);
         fetchRooms();
       } catch (err) {
         alert('Ошибка при удалении');

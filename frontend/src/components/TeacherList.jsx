@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function TeacherList() {
   const [teachers, setTeachers] = useState([]);
@@ -12,8 +13,7 @@ function TeacherList() {
 
   const fetchTeachers = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/преподаватели/');
-      // DRF возвращает данные в формате {count, next, previous, results}
+      const response = await axios.get(`${API_URL}/api/преподаватели/`);
       setTeachers(response.data.results || response.data);
       setLoading(false);
     } catch (err) {
@@ -26,8 +26,8 @@ function TeacherList() {
   const handleDelete = async (id) => {
     if (window.confirm('Вы уверены, что хотите удалить этого преподавателя?')) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/преподаватели/${id}/`);
-        fetchTeachers(); // Перезагружаем список после удаления
+        await axios.delete(`${API_URL}/api/преподаватели/${id}/`);
+        fetchTeachers();
       } catch (err) {
         alert('Ошибка при удалении');
         console.error(err);

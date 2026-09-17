@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function TeacherForm({ onTeacherAdded }) {
   const [formData, setFormData] = useState({
@@ -24,9 +25,8 @@ function TeacherForm({ onTeacherAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/api/преподаватели/', formData);
+      await axios.post(`${API_URL}/api/преподаватели/`, formData);
       alert('Преподаватель успешно добавлен!');
-      // Очищаем форму
       setFormData({
         фио: '',
         должность: '',
@@ -37,7 +37,6 @@ function TeacherForm({ onTeacherAdded }) {
         этаж: '',
         аудитория: ''
       });
-      // Уведомляем родительский компонент о необходимости обновить список
       if (onTeacherAdded) {
         onTeacherAdded();
       }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function ReportList() {
   const [reports, setReports] = useState([]);
@@ -12,7 +13,7 @@ function ReportList() {
 
   const fetchReports = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/отчеты/');
+      const response = await axios.get(`${API_URL}/api/отчеты/`);
       setReports(response.data.results || response.data);
       setLoading(false);
     } catch (err) {
@@ -24,11 +25,10 @@ function ReportList() {
   const generateReport = async (type) => {
     setGenerating(true);
     try {
-      // Получаем все необходимые данные
       const [teachersRes, workloadsRes, publicationsRes] = await Promise.all([
-        axios.get('http://127.0.0.1:8000/api/преподаватели/'),
-        axios.get('http://127.0.0.1:8000/api/нагрузка/'),
-        axios.get('http://127.0.0.1:8000/api/публикации/')
+        axios.get(`${API_URL}/api/преподаватели/`),
+        axios.get(`${API_URL}/api/нагрузка/`),
+        axios.get(`${API_URL}/api/публикации/`)
       ]);
 
       const teachers = teachersRes.data.results || teachersRes.data;
@@ -112,8 +112,7 @@ function ReportList() {
         });
       }
 
-      // Создаём отчёт в базе данных
-      await axios.post('http://127.0.0.1:8000/api/отчеты/', {
+      await axios.post(`${API_URL}/api/отчеты/`, {
         тип: type,
         данные: reportData
       });
@@ -131,7 +130,7 @@ function ReportList() {
   const handleDelete = async (id) => {
     if (window.confirm('Удалить отчёт?')) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/отчеты/${id}/`);
+        await axios.delete(`${API_URL}/api/отчеты/${id}/`);
         fetchReports();
       } catch (err) {
         alert('Ошибка при удалении');
@@ -154,7 +153,6 @@ function ReportList() {
     <div style={{ padding: '20px' }}>
       <h2>Отчёты</h2>
       
-      {/* Кнопки генерации отчётов */}
       <div style={{ 
         backgroundColor: '#f9f9f9', 
         padding: '20px', 
@@ -212,12 +210,11 @@ function ReportList() {
               fontSize: '14px'
             }}
           >
-            {generating ? 'Формирование...' : ' Отчет по публикациям'}
+            {generating ? 'Формирование...' : '📚 Отчет по публикациям'}
           </button>
         </div>
       </div>
 
-      {/* Список отчётов */}
       <h3>История отчётов</h3>
       {reports.length === 0 ? (
         <p>Отчёты ещё не формировались. Нажмите на одну из кнопок выше.</p>

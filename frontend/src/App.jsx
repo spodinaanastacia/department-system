@@ -7,6 +7,7 @@ import SubjectList from './components/SubjectList';
 import PublicationList from './components/PublicationList';
 import WorkloadList from './components/WorkloadList';
 import ReportList from './components/ReportList';
+import BookingList from './components/BookingList';
 
 function App() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -80,6 +81,21 @@ function App() {
               onMouseLeave={(e) => e.target.style.backgroundColor = '#16537e'}
             >
                Аудитории
+            </Link>
+            <Link 
+              to="/bookings" 
+              style={{
+                color: 'white',
+                textDecoration: 'none',
+                padding: '10px 20px',
+                backgroundColor: '#16537e',
+                borderRadius: '5px',
+                transition: 'background-color 0.3s'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#1a6496'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#16537e'}
+            >
+               Бронирования
             </Link>
             <Link 
               to="/subjects" 
@@ -162,6 +178,7 @@ function App() {
                 }}>
                   <li>Управлять списком преподавателей</li>
                   <li>Вести учёт аудиторий и рабочих мест</li>
+                  <li>Бронировать аудитории для занятий</li>
                   <li>Отслеживать преподаваемые дисциплины</li>
                   <li>Учитывать научные публикации</li>
                   <li>Фиксировать дополнительную нагрузку</li>
@@ -181,6 +198,8 @@ function App() {
             } />
             
             <Route path="/rooms" element={<RoomList />} />
+            
+            <Route path="/bookings" element={<BookingList />} />
             
             <Route path="/subjects" element={<SubjectList />} />
             

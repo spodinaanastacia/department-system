@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function PublicationList() {
   const [publications, setPublications] = useState([]);
@@ -22,8 +23,8 @@ function PublicationList() {
   const fetchData = async () => {
     try {
       const [publicationsRes, teachersRes] = await Promise.all([
-        axios.get('http://127.0.0.1:8000/api/публикации/'),
-        axios.get('http://127.0.0.1:8000/api/преподаватели/')
+        axios.get(`${API_URL}/api/публикации/`),
+        axios.get(`${API_URL}/api/преподаватели/`)
       ]);
       setPublications(publicationsRes.data.results || publicationsRes.data);
       setTeachers(teachersRes.data.results || teachersRes.data);
@@ -37,7 +38,7 @@ function PublicationList() {
   const handleAddPublication = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/api/публикации/', newPublication);
+      await axios.post(`${API_URL}/api/публикации/`, newPublication);
       alert('Публикация добавлена!');
       setShowForm(false);
       setNewPublication({
@@ -57,7 +58,7 @@ function PublicationList() {
   const handleDelete = async (id) => {
     if (window.confirm('Удалить публикацию?')) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/публикации/${id}/`);
+        await axios.delete(`${API_URL}/api/публикации/${id}/`);
         fetchData();
       } catch (err) {
         alert('Ошибка при удалении');
